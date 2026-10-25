@@ -75,7 +75,7 @@ Example:
 ```yaml
 services:
   nextcloud-desktop:
-    image: ghcr.io/exampleuser/nextcloud-desktop:latest
+    image: ghcr.io/itwissen-yt/nextcloud-desktop:latest
     container_name: nextcloud-desktop
     restart: unless-stopped
     ports:
