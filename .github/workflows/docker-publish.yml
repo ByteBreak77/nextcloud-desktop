@@ -6,8 +6,9 @@ on:
       - main
 
   schedule:
-    # Jeden Sonntag um 03:00 UTC
-    - cron: "0 3 * * 0"
+    # Jeden 1. des Monats um 03:00 UTC
+    - cron: "0 3 1 * *"
+
 
   # Zusätzlich manuell unter GitHub -> Actions startbar
   workflow_dispatch:
@@ -23,6 +24,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      # 1. ERGÄNZUNG: QEMU wird benötigt, um ARM64 auf Intel-Servern zu emulieren
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -54,6 +59,9 @@ jobs:
 
           # apt update / Paketinstallation wirklich neu ausführen
           no-cache: true
+
+          # 2. ERGÄNZUNG: Hier werden die Ziel-Architekturen definiert
+          platforms: linux/amd64,linux/arm64
 
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
