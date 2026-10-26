@@ -61,15 +61,6 @@ Example:
 Do **not** select a directory under the container's temporary filesystem if you want the files to survive container recreation.
 
 ## Docker Compose for deployment
-
-Copy `deploy/docker-compose.yml` to the target server and replace:
-
-```text
-GITHUB_USER
-```
-
-with your GitHub username or organization.
-
 Example:
 
 ```yaml
@@ -98,72 +89,6 @@ Create the directories before the first start:
 mkdir -p Config Data
 docker compose up -d
 ```
-
-## Publish to GitHub Container Registry
-
-This repository includes `.github/workflows/docker-publish.yml`.
-
-Push the repository to GitHub with the default branch `main`. Every push to `main` builds and publishes:
-
-```text
-ghcr.io/YOUR_GITHUB_USERNAME/nextcloud-desktop:latest
-```
-
-A Git tag such as:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-also publishes a versioned image tag.
-
-## Initial Git commands
-
-```bash
-git init
-git add .
-git commit -m "Initial Nextcloud Desktop image"
-git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/nextcloud-desktop.git
-git push -u origin main
-```
-
-## Watchtower
-
-Watchtower can update the running container when a new `latest` image is published.
-
-If your Watchtower installation is configured with label filtering, the supplied deployment Compose already contains:
-
-```text
-com.centurylinklabs.watchtower.enable=true
-```
-
-For a private GHCR image, the target Docker host must be authenticated to `ghcr.io`. For a public container package, authentication is generally not needed for pulling.
-
-## Updating
-
-Development side:
-
-```bash
-git add .
-git commit -m "Update image"
-git push
-```
-
-GitHub Actions then builds and publishes the new image. The target server can pull it manually with:
-
-```bash
-docker compose pull
-docker compose up -d
-```
-
-or automatically through Watchtower.
-
-## Important update behavior
-
-Do not delete the mounted `Config` and `Data` directories. Replacing the container or updating the image is safe as long as these mounts stay in place.
-
 
 ## Third-party software and trademarks
 
