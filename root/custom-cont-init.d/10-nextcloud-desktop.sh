@@ -2,12 +2,13 @@
 set -e
 
 mkdir -p /config/Desktop /config/.config/autostart /client-data
+mkdir -p /config/.local/share/keyrings /config/.local/share/nextcloud-desktop
 
 cat > /config/Desktop/Nextcloud.desktop <<'EOD'
 [Desktop Entry]
 Type=Application
 Name=Nextcloud
-Exec=nextcloud
+Exec=/usr/local/bin/nextcloud-with-keyring.sh
 Icon=Nextcloud
 Terminal=false
 Categories=Network;
@@ -33,13 +34,27 @@ Terminal=false
 Categories=Network;WebBrowser;
 EOD
 
+# This entry is managed by the image, so it is refreshed when upgrading an
+# existing /config volume (older image versions used Exec=nextcloud).
 cat > /config/.config/autostart/nextcloud.desktop <<'EOD'
 [Desktop Entry]
 Type=Application
 Name=Nextcloud
-Exec=nextcloud
+Exec=/usr/local/bin/nextcloud-with-keyring.sh
 X-GNOME-Autostart-enabled=true
 EOD
 
-chmod +x /config/Desktop/*.desktop
-chown -R ${PUID:-1000}:${PGID:-1000} /config/Desktop /config/.config /client-data 2>/dev/null || true
+chmod 0755 /config/Desktop/*.desktop
+chmod 0644 /config/.config/autostart/nextcloud.desktop
+chmod 0700 /config/.local/share/keyrings /config/.local/share/nextcloud-desktop
+
+# Important: do not use chown -R on /client-data. It could traverse many GB
+# of Nextcloud files at every container start. Only fix our direct entries.
+user_id="${PUID:-1000}"
+group_id="${PGID:-1000}"
+chown "${user_id}:${group_id}" \
+  /config/Desktop /config/.config /config/.config/autostart \
+  /config/.local /config/.local/share /config/.local/share/keyrings \
+  /config/.local/share/nextcloud-desktop \
+  /client-data /config/Desktop/*.desktop \
+  /config/.config/autostart/nextcloud.desktop 2>/dev/null || true

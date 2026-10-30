@@ -1,17 +1,26 @@
+# Portainer > Stacks > Add stack > Web editor
+# Prebuilt image from GitHub Container Registry; NO build and NO host setup.
+# Set CONFIG_PATH, DATA_PATH and optionally WEB_PORT in Portainer.
 services:
   nextcloud-desktop:
-    image: ghcr.io/GITHUB_USER/nextcloud-desktop:latest
+    image: ghcr.io/bytebreak77/nextcloud-desktop:latest
     container_name: nextcloud-desktop
     restart: unless-stopped
     ports:
-      - "3100:3001"
+      - "${WEB_PORT:-3100}:3001"
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Europe/Berlin
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      TZ: "${TZ:-Europe/Berlin}"
     volumes:
-      - ./Config:/config
-      - ./Data:/client-data
+      - type: bind
+        source: "${CONFIG_PATH:-/opt/nextcloud-desktop/Config}"
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: "${DATA_PATH:-/opt/nextcloud-desktop/Data}"
+        target: /client-data
+        bind:
+          create_host_path: true
     shm_size: "1gb"
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"

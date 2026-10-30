@@ -50,6 +50,9 @@ This image installs packages from the Debian GNU/Linux repositories, including:
 - `curl`
 - `ca-certificates`
 - `nano`
+- `gnome-keyring`
+- `libsecret-tools`
+- `dbus`, `dbus-x11`, `libglib2.0-bin`
 
 Each Debian package is distributed under its own applicable license.
 
@@ -71,4 +74,4 @@ Use of names such as Nextcloud, Debian, Firefox, LinuxServer.io, and others is p
 
 This container project is maintained at:
 
-https://github.com/ITWissen-YT/nextcloud-desktop
+https://github.com/ByteBreak77/nextcloud-desktop

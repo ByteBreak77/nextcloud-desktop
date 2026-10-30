@@ -1,6 +1,8 @@
 .git
 .github
-Config
-Data
-*.zip
+Config/
+Data/
+Secrets/
+.env
 *.tar
+*.log

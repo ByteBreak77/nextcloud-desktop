@@ -1,4 +1,6 @@
 Config/
 Data/
+Secrets/
+.env
 *.tar
-*.zip
+*.log

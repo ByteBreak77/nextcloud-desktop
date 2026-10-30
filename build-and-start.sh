@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 cd "$(dirname "$0")"
-mkdir -p Config Data
 docker compose up -d --build
+docker compose ps
